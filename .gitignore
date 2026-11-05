@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# 月刊原始 PDF（檔案很大，不進版控、不部署）
+/pdf/
