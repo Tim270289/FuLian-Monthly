@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import FlipBook from "@/components/FlipBook";
 import IssueCredits from "@/components/IssueCredits";
+import IssueStats from "@/components/IssueStats";
+import ReaderThemeToggle from "@/components/ReaderThemeToggle";
 import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
 import { issues, ogImageOf, pagesOf } from "@/data/issues";
@@ -41,7 +43,8 @@ async function IssueReader({ params }: { params: PageProps<"/issues/[id]">["para
 
   return (
     <>
-      <h1 className="mb-6 text-center text-2xl font-bold text-stone-900">{issue.title}</h1>
+      <h1 className="mb-3 text-center text-2xl font-bold text-stone-900 dark:text-stone-100">{issue.title}</h1>
+      <IssueStats issueId={issue.id} />
       <FlipBook pages={pagesOf(issue)} />
       {issue.credits && issue.credits.length > 0 && <IssueCredits credits={issue.credits} />}
     </>
@@ -50,15 +53,19 @@ async function IssueReader({ params }: { params: PageProps<"/issues/[id]">["para
 
 export default function IssuePage({ params }: PageProps<"/issues/[id]">) {
   return (
-    <div className="flex flex-1 flex-col bg-stone-100">
+    // .reader：深色閱讀模式只作用在這個範圍內（見 globals.css）
+    <div className="reader flex flex-1 flex-col bg-stone-100 transition-colors dark:bg-stone-900">
       <SiteHeader>
-        <Link href="/" className="shrink-0 text-sm text-stone-600 hover:text-stone-900">
-          ← 返回<span className="hidden sm:inline">歷期月刊</span>
-        </Link>
+        <div className="flex shrink-0 items-center gap-3 sm:gap-4">
+          <ReaderThemeToggle />
+          <Link href="/" className="text-sm text-stone-600 hover:text-stone-900 dark:text-stone-300 dark:hover:text-white">
+            ← 返回<span className="hidden sm:inline">歷期月刊</span>
+          </Link>
+        </div>
       </SiteHeader>
 
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6">
-        <Suspense fallback={<p className="py-24 text-center text-stone-600">月刊載入中…</p>}>
+        <Suspense fallback={<p className="py-24 text-center text-stone-600 dark:text-stone-400">月刊載入中…</p>}>
           <IssueReader params={params} />
         </Suspense>
       </main>

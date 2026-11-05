@@ -101,7 +101,7 @@ export default function FlipBook({ pages }: { pages: string[] }) {
   }
 
   if (!ratio) {
-    return <p className="py-24 text-center text-stone-600">月刊載入中…</p>;
+    return <p className="py-24 text-center text-stone-600 dark:text-stone-400">月刊載入中…</p>;
   }
 
   const total = pages.length;
@@ -124,12 +124,12 @@ export default function FlipBook({ pages }: { pages: string[] }) {
         style={{ maxWidth: `max(560px, calc((100vh - 240px) / ${ratio} * 2))` }}
       />
 
-      <div className="flex items-center gap-4 text-sm text-stone-700">
+      <div className="flex items-center gap-4 text-sm text-stone-700 dark:text-stone-300">
         <button
           type="button"
           onClick={() => flipRef.current?.flipPrev()}
           disabled={page === 0}
-          className="rounded-md border border-stone-300 bg-white px-4 py-2 hover:bg-stone-100 disabled:opacity-40"
+          className="rounded-md border border-stone-300 bg-white px-4 py-2 hover:bg-stone-100 disabled:opacity-40 dark:border-stone-600 dark:bg-stone-800 dark:text-stone-100 dark:hover:bg-stone-700"
         >
           上一頁
         </button>
@@ -140,7 +140,7 @@ export default function FlipBook({ pages }: { pages: string[] }) {
           type="button"
           onClick={() => flipRef.current?.flipNext()}
           disabled={page >= total - 1}
-          className="rounded-md border border-stone-300 bg-white px-4 py-2 hover:bg-stone-100 disabled:opacity-40"
+          className="rounded-md border border-stone-300 bg-white px-4 py-2 hover:bg-stone-100 disabled:opacity-40 dark:border-stone-600 dark:bg-stone-800 dark:text-stone-100 dark:hover:bg-stone-700"
         >
           下一頁
         </button>
@@ -149,7 +149,7 @@ export default function FlipBook({ pages }: { pages: string[] }) {
       <button
         type="button"
         onClick={() => setZoomIndex(page)}
-        className="-mt-2 flex items-center gap-2 rounded-md bg-stone-800 px-5 py-2.5 text-sm font-medium text-white hover:bg-stone-700"
+        className="-mt-2 flex items-center gap-2 rounded-md bg-stone-800 px-5 py-2.5 text-sm font-medium text-white hover:bg-stone-700 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-white"
       >
         <svg aria-hidden="true" viewBox="0 0 20 20" className="h-4 w-4 fill-none stroke-current" strokeWidth={2}>
           <circle cx="8.5" cy="8.5" r="5.5" />

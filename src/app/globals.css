@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* dark: 只作用在閱讀頁（.reader）內，由 <html data-reader-theme="dark"> 開啟，首頁不受影響 */
+@custom-variant dark (&:where([data-reader-theme="dark"] .reader, [data-reader-theme="dark"] .reader *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -23,4 +26,83 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+}
+
+/* 放大閱讀的翻頁動畫：新頁面以書脊為軸轉入（往後翻從右側、往前翻從左側） */
+@keyframes page-turn-next {
+  from {
+    transform: perspective(1800px) rotateY(-75deg);
+    opacity: 0.2;
+  }
+  to {
+    transform: perspective(1800px) rotateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes page-turn-prev {
+  from {
+    transform: perspective(1800px) rotateY(75deg);
+    opacity: 0.2;
+  }
+  to {
+    transform: perspective(1800px) rotateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes page-turn-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.page-turn-next {
+  transform-origin: left center;
+  animation: page-turn-next 0.5s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+.page-turn-prev {
+  transform-origin: right center;
+  animation: page-turn-prev 0.5s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+.page-turn-in {
+  animation: page-turn-in 0.25s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-turn-next,
+  .page-turn-prev,
+  .page-turn-in {
+    animation: none;
+  }
+}
+
+/* 按下喜歡時愛心彈跳一下 */
+@keyframes heart-pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.45);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.heart-pop {
+  animation: heart-pop 0.4s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heart-pop {
+    animation: none;
+  }
 }

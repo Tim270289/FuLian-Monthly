@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import ShareButton from "@/components/ShareButton";
+import { SiteVisitTracker } from "@/components/SiteViews";
 import { issues, ogImageOf } from "@/data/issues";
+import { READER_THEME_SCRIPT } from "@/lib/reader-theme";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -42,10 +44,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="zh-Hant"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      // 閱讀模式腳本會在 React 接手前改動 <html> 的屬性
+      suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: READER_THEME_SCRIPT }} />
+      </head>
       <body className="min-h-full flex flex-col">
         {children}
         <ShareButton />
+        <SiteVisitTracker />
       </body>
     </html>
   );

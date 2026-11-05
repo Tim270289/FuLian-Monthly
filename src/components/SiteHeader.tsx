@@ -4,7 +4,7 @@ import Link from "next/link";
 // 全站共用頁首：左邊是富聯 Logo＋站名（連回首頁），右邊放各頁自己的連結
 export default function SiteHeader({ children }: { children?: React.ReactNode }) {
   return (
-    <header className="border-b border-stone-200 bg-white">
+    <header className="border-b border-stone-200 bg-white dark:border-stone-800 dark:bg-stone-950">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
         <Link href="/" className="flex items-center gap-3">
           <Image
@@ -14,9 +14,9 @@ export default function SiteHeader({ children }: { children?: React.ReactNode })
             height={830}
             sizes="160px"
             loading="eager"
-            className="h-9 w-auto sm:h-10"
+            className="h-9 w-auto sm:h-10 dark:hue-rotate-180 dark:invert"
           />
-          <span className="text-base font-bold tracking-wide text-stone-900 sm:text-lg">富聯商務月刊</span>
+          <span className="text-base font-bold tracking-wide text-stone-900 sm:text-lg dark:text-stone-100">富聯商務月刊</span>
         </Link>
         {children}
       </div>

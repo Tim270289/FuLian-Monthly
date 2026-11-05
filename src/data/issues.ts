@@ -13,6 +13,8 @@ export type Issue = {
   title: string;
   /** 頁數，由 npm run pages 轉檔後印出 */
   pages: number;
+  /** 首頁主視覺的本期簡介；沒填就用預設文字 */
+  summary?: string;
   /** 本期製作團隊，顯示在閱讀頁下方；沒填就不顯示 */
   credits?: Credit[];
 };
