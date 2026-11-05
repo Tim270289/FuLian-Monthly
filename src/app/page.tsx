@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import SiteFooter from "@/components/SiteFooter";
+import SiteHeader from "@/components/SiteHeader";
 import { coverOf, issues, type Issue } from "@/data/issues";
 
 // 桌機版第一排的封面數量，這些封面優先載入
@@ -39,11 +41,7 @@ function IssueCard({ issue, isLatest, eager }: { issue: Issue; isLatest: boolean
 export default function Home() {
   return (
     <div className="flex flex-1 flex-col bg-stone-50">
-      <header className="border-b border-stone-200 bg-white">
-        <div className="mx-auto flex max-w-6xl items-center px-4 py-4 sm:px-6">
-          <span className="text-lg font-bold tracking-wide text-stone-900">富聯商務月刊</span>
-        </div>
-      </header>
+      <SiteHeader />
 
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6 sm:py-14">
         <section>
@@ -63,11 +61,7 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="border-t border-stone-200 bg-white">
-        <div className="mx-auto max-w-6xl px-4 py-6 text-sm text-stone-500 sm:px-6">
-          © 富聯商務月刊
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { PageFlip } from "page-flip";
+import PageZoom from "./PageZoom";
 
 export default function FlipBook({ pages }: { pages: string[] }) {
   const bookRef = useRef<HTMLDivElement>(null);
@@ -9,6 +10,9 @@ export default function FlipBook({ pages }: { pages: string[] }) {
   const [ratio, setRatio] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(0);
+  // 放大閱讀中的頁面索引；null 代表沒開啟
+  const [zoomIndex, setZoomIndex] = useState<number | null>(null);
+  const zoomOpen = zoomIndex !== null;
 
   // 1. 先載入第一頁，取得頁面比例（其餘頁面在背景載入）
   useEffect(() => {
@@ -81,15 +85,16 @@ export default function FlipBook({ pages }: { pages: string[] }) {
     };
   }, [pages, ratio]);
 
-  // 鍵盤左右鍵翻頁
+  // 鍵盤左右鍵翻頁（放大閱讀開啟時交給放大視窗處理）
   useEffect(() => {
+    if (zoomOpen) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "ArrowRight") flipRef.current?.flipNext();
       if (e.key === "ArrowLeft") flipRef.current?.flipPrev();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  }, [zoomOpen]);
 
   if (error) {
     return <p className="py-20 text-center text-red-600">{error}</p>;
@@ -100,6 +105,15 @@ export default function FlipBook({ pages }: { pages: string[] }) {
   }
 
   const total = pages.length;
+
+  // 關閉放大閱讀時，書本翻到剛才看的那一頁
+  const closeZoom = () => {
+    if (zoomIndex !== null) {
+      flipRef.current?.turnToPage(zoomIndex);
+      setPage(zoomIndex);
+    }
+    setZoomIndex(null);
+  };
 
   return (
     <div className="flex flex-col items-center gap-6">
@@ -131,6 +145,22 @@ export default function FlipBook({ pages }: { pages: string[] }) {
           下一頁
         </button>
       </div>
+
+      <button
+        type="button"
+        onClick={() => setZoomIndex(page)}
+        className="-mt-2 flex items-center gap-2 rounded-md bg-stone-800 px-5 py-2.5 text-sm font-medium text-white hover:bg-stone-700"
+      >
+        <svg aria-hidden="true" viewBox="0 0 20 20" className="h-4 w-4 fill-none stroke-current" strokeWidth={2}>
+          <circle cx="8.5" cy="8.5" r="5.5" />
+          <path d="M12.5 12.5 17 17M8.5 6v5M6 8.5h5" strokeLinecap="round" />
+        </svg>
+        放大閱讀
+      </button>
+
+      {zoomIndex !== null && (
+        <PageZoom pages={pages} index={zoomIndex} onChange={setZoomIndex} onClose={closeZoom} />
+      )}
     </div>
   );
 }

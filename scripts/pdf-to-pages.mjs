@@ -3,10 +3,12 @@
 //   讀取 pdf/2026-11-001.pdf
 //   輸出 public/issues/2026-11-001/01.jpg、02.jpg…（翻書用）
 //   輸出 public/issues/2026-11-001/cover.jpg（首頁縮圖）
+//   輸出 public/issues/2026-11-001/og.jpg（分享到 LINE / Facebook 的預覽圖）
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { createCanvas } from "@napi-rs/canvas";
 import { getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
+import { makeOgImage } from "./og-image.mjs";
 
 // 翻書頁面寬度（px）：跨頁時單頁約 700 CSS px，兩倍解析度讓高解析螢幕也清楚
 const PAGE_WIDTH = 1600;
@@ -51,5 +53,6 @@ for (let i = 1; i <= pdf.numPages; i++) {
 }
 
 await task.destroy();
+await makeOgImage(outDir);
 console.log(`\n完成：${pdf.numPages} 頁，共 ${(total / 1024 / 1024).toFixed(1)} MB → public/issues/${id}/`);
 console.log(`請在 src/data/issues.ts 填入 pages: ${pdf.numPages}`);
