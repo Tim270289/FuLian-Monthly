@@ -66,6 +66,12 @@ export async function getStats(key: string): Promise<Stats> {
   return { views, likes };
 }
 
+/** 一次讀取多個對象的計數（首頁卡片用），只發一次資料庫請求 */
+export async function getManyStats(keys: string[]): Promise<Record<string, Stats>> {
+  const values = await store!.get(keys.flatMap((k) => [viewsKey(k), likesKey(k)]));
+  return Object.fromEntries(keys.map((k, i) => [k, { views: values[i * 2], likes: values[i * 2 + 1] }]));
+}
+
 export async function addView(key: string): Promise<Stats> {
   await store!.incr(viewsKey(key), 1);
   return getStats(key);

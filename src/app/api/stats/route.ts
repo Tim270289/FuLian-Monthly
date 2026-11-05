@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { issues } from "@/data/issues";
-import { addLike, addView, getStats, statsAvailable } from "@/lib/stats";
+import { addLike, addView, getManyStats, getStats, statsAvailable } from "@/lib/stats";
 
 // 計數對象：site（整個網站）或某一期月刊的 id；只接受已知的對象，避免被灌入任意資料
 const SITE = "site";
@@ -11,8 +11,18 @@ const unavailable = () => Response.json({ error: "stats unavailable" }, { status
 const badRequest = () => Response.json({ error: "bad request" }, { status: 400 });
 
 // 讀取計數：GET /api/stats?key=2026-11-001
+// 一次讀多個：GET /api/stats?keys=2026-11-001,2026-12-002 → { "2026-11-001": {...}, ... }
 export async function GET(request: NextRequest) {
-  const key = request.nextUrl.searchParams.get("key");
+  const params = request.nextUrl.searchParams;
+  const many = params.get("keys");
+  if (many !== null) {
+    const keys = [...new Set(many.split(","))];
+    if (keys.length === 0 || keys.length > issues.length + 1 || !keys.every(isValidKey)) return badRequest();
+    if (!statsAvailable) return unavailable();
+    return Response.json(await getManyStats(keys));
+  }
+
+  const key = params.get("key");
   if (!isValidKey(key)) return badRequest();
   if (!statsAvailable) return unavailable();
   return Response.json(await getStats(key));

@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "pages": "node scripts/pdf-to-pages.mjs",
-    "og": "node scripts/og-image.mjs"
+    "og": "node scripts/og-image.mjs",
+    "icons": "node scripts/make-icons.mjs"
   },
   "dependencies": {
     "@upstash/redis": "^1.41.0",

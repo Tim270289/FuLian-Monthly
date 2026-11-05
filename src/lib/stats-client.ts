@@ -64,3 +64,27 @@ export async function toggleLike(key: string, like: boolean): Promise<Stats | nu
 }
 
 export const formatCount = (n: number) => n.toLocaleString("zh-TW");
+
+// 首頁多張卡片同時要計數時，收集起來合併成一次請求
+let batch: { keys: Set<string>; promise: Promise<Record<string, Stats> | null> } | null = null;
+
+/** 讀取某一期的計數（不會增加瀏覽次數）；同一輪內的呼叫會合併成一次請求 */
+export function getIssueStats(key: string): Promise<Stats | null> {
+  if (!batch) {
+    const keys = new Set<string>();
+    const promise = new Promise<Record<string, Stats> | null>((resolve) =>
+      setTimeout(async () => {
+        batch = null;
+        try {
+          const res = await fetch(`/api/stats?keys=${[...keys].map(encodeURIComponent).join(",")}`);
+          resolve(res.ok ? ((await res.json()) as Record<string, Stats>) : null);
+        } catch {
+          resolve(null);
+        }
+      }, 0),
+    );
+    batch = { keys, promise };
+  }
+  batch.keys.add(key);
+  return batch.promise.then((all) => all?.[key] ?? null);
+}

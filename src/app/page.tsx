@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import IssueLikeCount from "@/components/IssueLikeCount";
 import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
 import SiteViews from "@/components/SiteViews";
@@ -91,6 +92,7 @@ function IssueCard({ issue, isLatest, eager }: { issue: Issue; isLatest: boolean
           )}
         </div>
         <p className="mt-3 text-sm font-medium text-stone-800">{issue.title}</p>
+        <IssueLikeCount issueId={issue.id} />
       </Link>
     </li>
   );
